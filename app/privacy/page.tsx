@@ -21,14 +21,6 @@ export default function PrivacyPage() {
           your images.
         </p>
 
-        <h2>Data Controller</h2>
-
-        <p>
-          Fabio Souto<br />
-          Spain<br />
-          Contact: fabio@fabiosouto.me
-        </p>
-
         <h2>Image Processing</h2>
 
         <p>
@@ -50,7 +42,14 @@ export default function PrivacyPage() {
         <h2>Website Hosting</h2>
 
         <p>
-          This website is hosted on Vercel. When you visit the site, the following data
+          This website is hosted on{" "}
+          <a
+            href="https://www.cloudflare.com/privacypolicy/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Cloudflare Pages
+          </a>. When you visit the site, the following data
           may be automatically collected by the hosting infrastructure:
         </p>
 
@@ -63,14 +62,7 @@ export default function PrivacyPage() {
 
         <p>
           This data is collected for security and performance purposes and is processed
-          by Vercel in accordance with their{" "}
-          <a
-            href="https://vercel.com/legal/privacy-policy"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            privacy policy
-          </a>.
+          by Cloudflare in accordance with their privacy policy.
         </p>
 
         <h2>Cookies</h2>
@@ -121,6 +113,28 @@ export default function PrivacyPage() {
         <p>
           For any questions about this privacy policy or to exercise your rights,
           please contact us at: fabio@fabiosouto.me
+        </p>
+
+        <h2>Open Source</h2>
+
+        <p>
+          Both this website and the underlying library are open source. You can review
+          exactly how your images are processed by inspecting the{" "}
+          <a
+            href="https://github.com/fasouto/picscrub"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            library source code
+          </a>{" "}
+          and the{" "}
+          <a
+            href="https://github.com/fasouto/picscrub-web"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            website source code
+          </a>.
         </p>
 
         <h2>Changes to This Policy</h2>
