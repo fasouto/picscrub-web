@@ -1,7 +1,15 @@
 {
-  "name": "website",
+  "name": "picscrub-web",
   "version": "0.1.0",
   "private": true,
+  "description": "picscrub.com — Strip metadata from images entirely in your browser",
+  "author": "Fabio Souto",
+  "license": "MIT",
+  "homepage": "https://picscrub.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fasouto/picscrub-web.git"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,9 +17,22 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@radix-ui/react-accordion": "^1.2.12",
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-slot": "^1.2.4",
+    "@tailwindcss/typography": "^0.5.19",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "exifr": "^7.1.3",
+    "lucide-react": "^0.563.0",
     "next": "16.1.4",
+    "picscrub": "^1.0.0",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "react-dropzone": "^14.3.8",
+    "react-markdown": "^10.1.0",
+    "shiki": "^3.21.0",
+    "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -21,6 +42,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.1.4",
     "tailwindcss": "^4",
+    "tw-animate-css": "^1.4.0",
     "typescript": "^5"
   }
 }
