@@ -185,8 +185,8 @@ export default function HowItWorksPage() {
               <p className="text-muted-foreground">
                 ICC color profiles are technically metadata and are stripped by default. For
                 most web use this doesn't matter, but if you're working with color-calibrated
-                workflows (print, professional photography), you can use the <code className="text-sm bg-white px-1.5 py-0.5 rounded">preserveIcc</code> option
-                to keep the color profile intact.
+                workflows (print, professional photography), you can check &quot;Keep color profile&quot; on this site, or use the <code className="text-sm bg-white px-1.5 py-0.5 rounded">preserveColorProfile</code> option in the{" "}
+                <a href="https://www.npmjs.com/package/picscrub" target="_blank" rel="noopener noreferrer" className="underline">picscrub library</a>.
               </p>
             </div>
           </div>

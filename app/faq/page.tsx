@@ -90,7 +90,9 @@ You can:
 - Contribute improvements
 - Fork and modify for your needs
 
-The code is available at: https://github.com/fasouto/picscrub`,
+The code is available at: https://github.com/fasouto/picscrub
+
+The core library is also published on [npm](https://www.npmjs.com/package/picscrub) if you want to use it in your own projects.`,
   },
   {
     question: "Does PicScrub work offline?",
@@ -116,7 +118,9 @@ This preview is typically full-resolution. We strip its metadata and return a cl
     question: "My image appears rotated after cleaning. Why?",
     answer: `Some apps rely on the EXIF orientation tag to display images correctly. By default, PicScrub removes this tag along with other metadata.
 
-If you're using the library programmatically, you can preserve the orientation tag:
+On this website, you can check the "Keep orientation" checkbox that appears when we detect an orientation tag.
+
+If you're using the [picscrub library](https://www.npmjs.com/package/picscrub) programmatically, you can preserve the orientation tag:
 
 \`\`\`typescript
 const result = await removeMetadata(imageBuffer, {
