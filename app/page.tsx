@@ -13,7 +13,7 @@ export default function HomePage() {
           <div className="max-w-3xl mx-auto">
             {/* Brief headline */}
             <div className="text-center mb-8">
-              <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">
+              <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-3">
                 Remove metadata from images
               </h1>
 
