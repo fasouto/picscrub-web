@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Metadata } from "next";
-import { ArrowLeft, Code2 } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "SVG Format Deep Dive - PicScrub",
@@ -22,14 +22,9 @@ export default function SVGPage() {
         </Link>
 
         {/* Header */}
-        <div className="flex items-center gap-4 mb-8">
-          <div className="p-3 rounded-lg bg-pink-500 text-white">
-            <Code2 className="h-8 w-8" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold">SVG Format</h1>
-            <p className="text-muted-foreground">Scalable Vector Graphics</p>
-          </div>
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold">SVG Format</h1>
+          <p className="text-muted-foreground">Scalable Vector Graphics</p>
         </div>
 
         {/* Content */}
@@ -52,7 +47,7 @@ export default function SVGPage() {
 
             <div className="bg-muted/50 p-4 rounded-lg">
               <h3 className="font-semibold mb-3">Basic SVG Structure</h3>
-              <pre className="text-sm bg-background p-3 rounded border overflow-x-auto">
+              <pre className="text-sm bg-muted text-foreground p-3 rounded border overflow-x-auto">
 {`<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg"
      xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -109,7 +104,7 @@ export default function SVGPage() {
                   Container for structured metadata, typically RDF/Dublin Core.
                   Can contain creator name, creation date, rights, and more.
                 </p>
-                <pre className="mt-2 text-xs bg-muted p-2 rounded overflow-x-auto">
+                <pre className="mt-2 text-xs bg-muted text-foreground p-2 rounded overflow-x-auto">
 {`<metadata>
   <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
            xmlns:dc="http://purl.org/dc/elements/1.1/">
@@ -159,13 +154,13 @@ export default function SVGPage() {
             </p>
 
             <div className="space-y-4">
-              <div className="border-l-4 border-purple-500 pl-4">
+              <div className="border-l-4 border-border pl-4">
                 <h3 className="font-semibold">inkscape:* / sodipodi:*</h3>
                 <p className="text-sm text-muted-foreground">
                   Inkscape adds namespaced attributes for layer names, guide
                   positions, document settings, and edit history.
                 </p>
-                <pre className="mt-2 text-xs bg-muted p-2 rounded overflow-x-auto">
+                <pre className="mt-2 text-xs bg-muted text-foreground p-2 rounded overflow-x-auto">
 {`<svg xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
      xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
      inkscape:version="1.2"
@@ -174,18 +169,18 @@ export default function SVGPage() {
 </svg>`}</pre>
               </div>
 
-              <div className="border-l-4 border-blue-500 pl-4">
+              <div className="border-l-4 border-border pl-4">
                 <h3 className="font-semibold">Adobe Illustrator</h3>
                 <p className="text-sm text-muted-foreground">
                   Illustrator embeds extensive metadata including version,
                   artboard settings, and sometimes full AI format data.
                 </p>
-                <pre className="mt-2 text-xs bg-muted p-2 rounded overflow-x-auto">
+                <pre className="mt-2 text-xs bg-muted text-foreground p-2 rounded overflow-x-auto">
 {`xmlns:i="http://ns.adobe.com/AdobeIllustrator/10.0/"
 xmlns:x="http://ns.adobe.com/Extensibility/1.0/"`}</pre>
               </div>
 
-              <div className="border-l-4 border-green-500 pl-4">
+              <div className="border-l-4 border-border pl-4">
                 <h3 className="font-semibold">Sketch / Figma</h3>
                 <p className="text-sm text-muted-foreground">
                   Modern design tools may embed layer names, component IDs, and
@@ -204,17 +199,17 @@ xmlns:x="http://ns.adobe.com/Extensibility/1.0/"`}</pre>
             </p>
 
             <div className="bg-muted/50 p-4 rounded-lg">
-              <pre className="text-sm overflow-x-auto">
+              <pre className="text-sm text-foreground overflow-x-auto">
 {`<?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/css" href="style.css"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->`}</pre>
             </div>
 
-            <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <h4 className="font-semibold text-yellow-800 mb-2">
+            <div className="mt-4 p-4 bg-muted/50 border border-border rounded-lg">
+              <h4 className="font-semibold mb-2">
                 Preserved vs Removed
               </h4>
-              <ul className="text-sm text-yellow-700 space-y-1">
+              <ul className="text-sm text-muted-foreground space-y-1">
                 <li>
                   • <code>&lt;?xml ...?&gt;</code> declaration:Preserved
                   (required)
@@ -345,17 +340,17 @@ xmlns:x="http://ns.adobe.com/Extensibility/1.0/"`}</pre>
               or PNGs might have their own EXIF metadata hiding inside.
             </p>
 
-            <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <h4 className="font-semibold text-yellow-800 mb-2">
+            <div className="p-4 bg-muted/50 border border-border rounded-lg">
+              <h4 className="font-semibold mb-2">
                 Current Limitation
               </h4>
-              <p className="text-sm text-yellow-700 mb-3">
+              <p className="text-sm text-muted-foreground mb-3">
                 PicScrub currently removes SVG-level metadata but doesn&apos;t
                 decode and process embedded raster images:
               </p>
-              <pre className="text-xs bg-white/50 p-2 rounded overflow-x-auto">
+              <pre className="text-xs bg-white/50 text-foreground p-2 rounded overflow-x-auto">
 {`<image href="data:image/jpeg;base64,/9j/4AAQ..." />`}</pre>
-              <p className="text-sm text-yellow-700 mt-3">
+              <p className="text-sm text-muted-foreground mt-3">
                 PicScrub currently does not process embedded raster images
                 within SVG files. For complete privacy, extract and process
                 embedded images separately.

@@ -24,14 +24,9 @@ export default function RAWPage() {
         </Link>
 
         {/* Header */}
-        <div className="flex items-center gap-4 mb-8">
-          <div className="p-3 rounded-lg bg-gray-600 text-white">
-            <Camera className="h-8 w-8" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold">RAW Formats</h1>
-            <p className="text-muted-foreground">Camera Raw Image Formats</p>
-          </div>
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold">RAW Formats</h1>
+          <p className="text-muted-foreground">Camera Raw Image Formats</p>
         </div>
 
         {/* Content */}
@@ -54,7 +49,7 @@ export default function RAWPage() {
 
             <div className="grid md:grid-cols-2 gap-4">
               <div className="p-4 border rounded-lg">
-                <h3 className="font-semibold text-blue-600 mb-2">
+                <h3 className="font-semibold mb-2">
                   Open Standard
                 </h3>
                 <p className="text-sm text-muted-foreground">
@@ -64,7 +59,7 @@ export default function RAWPage() {
               </div>
 
               <div className="p-4 border rounded-lg">
-                <h3 className="font-semibold text-orange-600 mb-2">
+                <h3 className="font-semibold mb-2">
                   Proprietary
                 </h3>
                 <p className="text-sm text-muted-foreground">
@@ -120,16 +115,16 @@ export default function RAWPage() {
               <h4 className="font-semibold mb-3">DNG-Specific Tags</h4>
               <div className="grid sm:grid-cols-2 gap-3 text-sm">
                 <div className="p-3 border rounded">
-                  <code className="text-blue-600">0xC612</code>:DNGVersion
+                  <code>0xC612</code>:DNGVersion
                 </div>
                 <div className="p-3 border rounded">
-                  <code className="text-blue-600">0xC614</code>:UniqueCameraModel
+                  <code>0xC614</code>:UniqueCameraModel
                 </div>
                 <div className="p-3 border rounded">
-                  <code className="text-blue-600">0xC621</code>:ColorMatrix1
+                  <code>0xC621</code>:ColorMatrix1
                 </div>
                 <div className="p-3 border rounded">
-                  <code className="text-blue-600">0xC65A</code>:CalibrationIlluminant1
+                  <code>0xC65A</code>:CalibrationIlluminant1
                 </div>
               </div>
             </div>
@@ -175,7 +170,7 @@ export default function RAWPage() {
               </div>
 
               {/* NEF */}
-              <div className="border-l-4 border-yellow-500 pl-4">
+              <div className="border-l-4 border-border pl-4">
                 <h3 className="font-semibold">NEF (Nikon)</h3>
                 <p className="text-sm text-muted-foreground mb-2">
                   TIFF-based, typically big-endian (MM). Contains extensive
@@ -187,7 +182,7 @@ export default function RAWPage() {
               </div>
 
               {/* ARW */}
-              <div className="border-l-4 border-orange-500 pl-4">
+              <div className="border-l-4 border-border pl-4">
                 <h3 className="font-semibold">ARW (Sony)</h3>
                 <p className="text-sm text-muted-foreground mb-2">
                   TIFF-based with Sony-specific modifications. Contains multiple
@@ -242,11 +237,11 @@ export default function RAWPage() {
               </ul>
             </div>
 
-            <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <h4 className="font-semibold text-yellow-800 mb-2">
+            <div className="p-4 bg-muted/50 border border-border rounded-lg">
+              <h4 className="font-semibold mb-2">
                 Privacy Consideration
               </h4>
-              <p className="text-sm text-yellow-700">
+              <p className="text-sm text-muted-foreground">
                 Embedded JPEG previews often contain the same EXIF metadata as
                 the main image, including GPS coordinates. PicScrub processes
                 these embedded images along with the main file.
@@ -278,11 +273,11 @@ export default function RAWPage() {
                 </ul>
               </div>
 
-              <div className="p-4 border border-blue-200 bg-blue-50 rounded-lg">
-                <h4 className="font-semibold text-blue-800 mb-2">
+              <div className="p-4 border border-border bg-muted/50 rounded-lg">
+                <h4 className="font-semibold mb-2">
                   Processing Challenge
                 </h4>
-                <p className="text-sm text-blue-700">
+                <p className="text-sm text-muted-foreground">
                   Maker Notes use undocumented, proprietary formats. Some are
                   encrypted. Complete removal requires understanding each
                   manufacturer&apos;s format.
@@ -434,20 +429,20 @@ export default function RAWPage() {
               removal, consider converting to DNG first.
             </p>
 
-            <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <h4 className="font-semibold text-blue-800 mb-2">
+            <div className="p-4 bg-muted/50 border border-border rounded-lg">
+              <h4 className="font-semibold mb-2">
                 Recommended Workflow
               </h4>
-              <p className="text-sm text-blue-700 mb-3">
+              <p className="text-sm text-muted-foreground mb-3">
                 DNG conversion strips out proprietary structures while
                 preserving the actual image data:
               </p>
-              <ol className="text-sm text-blue-700 space-y-1 list-decimal list-inside">
+              <ol className="text-sm text-muted-foreground space-y-1 list-decimal list-inside">
                 <li>Convert to DNG using Adobe DNG Converter (free)</li>
                 <li>Process with PicScrub to remove metadata</li>
                 <li>Share the cleaned DNG file</li>
               </ol>
-              <p className="text-xs text-blue-600 mt-3">
+              <p className="text-xs text-muted-foreground mt-3">
                 This ensures the recipient can open the file without proprietary
                 software, and all metadata is cleanly removed.
               </p>

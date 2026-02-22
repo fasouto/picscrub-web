@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Metadata } from "next";
-import { ArrowLeft, Film } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { HexViewer } from "@/components/HexViewer";
 import { StructureDiagram } from "@/components/StructureDiagram";
 
@@ -24,14 +24,9 @@ export default function GIFPage() {
         </Link>
 
         {/* Header */}
-        <div className="flex items-center gap-4 mb-8">
-          <div className="p-3 rounded-lg bg-purple-500 text-white">
-            <Film className="h-8 w-8" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold">GIF Format</h1>
-            <p className="text-muted-foreground">Graphics Interchange Format</p>
-          </div>
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold">GIF Format</h1>
+          <p className="text-muted-foreground">Graphics Interchange Format</p>
         </div>
 
         {/* Content */}
@@ -141,7 +136,7 @@ export default function GIFPage() {
                 </div>
               </div>
 
-              <div className="border-l-4 border-orange-500 pl-4">
+              <div className="border-l-4 border-border pl-4">
                 <h3 className="font-semibold">Application Extension (0xFF)</h3>
                 <p className="text-sm text-muted-foreground">
                   Application-specific data. Most important: NETSCAPE2.0 for
@@ -319,14 +314,14 @@ export default function GIFPage() {
               copy it byte-for-byte, which means zero quality loss.
             </p>
 
-            <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <h4 className="font-semibold text-blue-800 mb-2">
+            <div className="p-4 bg-muted/50 border border-border rounded-lg">
+              <h4 className="font-semibold mb-2">
                 Why This Matters
               </h4>
-              <p className="text-sm text-blue-700">
+              <p className="text-sm text-muted-foreground">
                 By preserving the original LZW data, PicScrub ensures:
               </p>
-              <ul className="text-sm text-blue-700 mt-2 space-y-1">
+              <ul className="text-sm text-muted-foreground mt-2 space-y-1">
                 <li>• No quality loss (bit-perfect image preservation)</li>
                 <li>• Fast processing (no decode/encode cycle)</li>
                 <li>• Identical file size for image data</li>
@@ -343,14 +338,14 @@ export default function GIFPage() {
               The metadata concerns are more mundane.
             </p>
 
-            <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <h4 className="font-semibold text-yellow-800 mb-2">
+            <div className="p-4 bg-muted/50 border border-border rounded-lg">
+              <h4 className="font-semibold mb-2">
                 What Can Leak
               </h4>
-              <p className="text-sm text-yellow-700">
+              <p className="text-sm text-muted-foreground">
                 GIF&apos;s privacy concerns are relatively minor compared to JPEG:
               </p>
-              <ul className="text-sm text-yellow-700 mt-2 space-y-1">
+              <ul className="text-sm text-muted-foreground mt-2 space-y-1">
                 <li>• Comment extensions (sometimes containing author notes)</li>
                 <li>• XMP metadata (rare, but possible)</li>
                 <li>• Software identification in application blocks</li>

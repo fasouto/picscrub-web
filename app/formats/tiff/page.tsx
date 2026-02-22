@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Metadata } from "next";
-import { ArrowLeft, Layers } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { HexViewer } from "@/components/HexViewer";
 import { StructureDiagram } from "@/components/StructureDiagram";
 
@@ -24,14 +24,9 @@ export default function TIFFPage() {
         </Link>
 
         {/* Header */}
-        <div className="flex items-center gap-4 mb-8">
-          <div className="p-3 rounded-lg bg-yellow-600 text-white">
-            <Layers className="h-8 w-8" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold">TIFF Format</h1>
-            <p className="text-muted-foreground">Tagged Image File Format</p>
-          </div>
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold">TIFF Format</h1>
+          <p className="text-muted-foreground">Tagged Image File Format</p>
         </div>
 
         {/* Content */}
@@ -80,13 +75,13 @@ export default function TIFFPage() {
               <h4 className="font-semibold mb-2">Byte Order</h4>
               <div className="grid md:grid-cols-2 gap-4 text-sm">
                 <div>
-                  <code className="text-blue-600">49 49</code> (II)
+                  <code>49 49</code> (II)
                   <p className="text-muted-foreground">
                     Intel:Little-endian (least significant byte first)
                   </p>
                 </div>
                 <div>
-                  <code className="text-blue-600">4D 4D</code> (MM)
+                  <code>4D 4D</code> (MM)
                   <p className="text-muted-foreground">
                     Motorola:Big-endian (most significant byte first)
                   </p>
@@ -109,19 +104,19 @@ export default function TIFFPage() {
               <h4 className="font-semibold mb-3">IFD Layout</h4>
               <div className="font-mono text-sm space-y-2">
                 <div className="flex items-center gap-3">
-                  <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded w-24 text-center">
+                  <span className="bg-muted text-foreground px-2 py-1 rounded w-24 text-center">
                     2 bytes
                   </span>
                   <span>Entry count (number of tags)</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="bg-green-100 text-green-800 px-2 py-1 rounded w-24 text-center">
+                  <span className="bg-muted text-foreground px-2 py-1 rounded w-24 text-center">
                     12 × N bytes
                   </span>
                   <span>Tag entries (12 bytes each)</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded w-24 text-center">
+                  <span className="bg-muted text-foreground px-2 py-1 rounded w-24 text-center">
                     4 bytes
                   </span>
                   <span>Next IFD offset (0 if none)</span>
@@ -139,16 +134,16 @@ export default function TIFFPage() {
                   <span>Value/Offset</span>
                 </div>
                 <div className="grid grid-cols-4 gap-2 text-center">
-                  <span className="bg-blue-100 text-blue-800 rounded px-2 py-1">
+                  <span className="bg-muted text-foreground rounded px-2 py-1">
                     2 bytes
                   </span>
-                  <span className="bg-green-100 text-green-800 rounded px-2 py-1">
+                  <span className="bg-muted text-foreground rounded px-2 py-1">
                     2 bytes
                   </span>
-                  <span className="bg-yellow-100 text-yellow-800 rounded px-2 py-1">
+                  <span className="bg-muted text-foreground rounded px-2 py-1">
                     4 bytes
                   </span>
-                  <span className="bg-purple-100 text-purple-800 rounded px-2 py-1">
+                  <span className="bg-muted text-foreground rounded px-2 py-1">
                     4 bytes
                   </span>
                 </div>
@@ -197,9 +192,9 @@ export default function TIFFPage() {
               </table>
             </div>
 
-            <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <h4 className="font-semibold text-blue-800 mb-2">Value Storage Rule</h4>
-              <p className="text-sm text-blue-700">
+            <div className="mt-4 p-4 bg-muted/50 border border-border rounded-lg">
+              <h4 className="font-semibold mb-2">Value Storage Rule</h4>
+              <p className="text-sm text-muted-foreground">
                 If <code>size × count ≤ 4</code> bytes, the value is stored directly
                 in the 4-byte value field. Otherwise, the field contains an offset
                 pointing to where the data is stored in the file.
@@ -241,33 +236,33 @@ export default function TIFFPage() {
 
             <div className="space-y-6">
               <div>
-                <h3 className="text-lg font-semibold mb-3 text-green-600">
+                <h3 className="text-lg font-semibold mb-3">
                   Image Data Tags (Preserved)
                 </h3>
                 <div className="grid sm:grid-cols-2 gap-3 text-sm">
                   <div className="p-3 border rounded">
-                    <code className="text-blue-600">0x0100</code>:ImageWidth
+                    <code>0x0100</code>:ImageWidth
                   </div>
                   <div className="p-3 border rounded">
-                    <code className="text-blue-600">0x0101</code>:ImageLength
+                    <code>0x0101</code>:ImageLength
                   </div>
                   <div className="p-3 border rounded">
-                    <code className="text-blue-600">0x0102</code>:BitsPerSample
+                    <code>0x0102</code>:BitsPerSample
                   </div>
                   <div className="p-3 border rounded">
-                    <code className="text-blue-600">0x0103</code>:Compression
+                    <code>0x0103</code>:Compression
                   </div>
                   <div className="p-3 border rounded">
-                    <code className="text-blue-600">0x0111</code>:StripOffsets
+                    <code>0x0111</code>:StripOffsets
                   </div>
                   <div className="p-3 border rounded">
-                    <code className="text-blue-600">0x0117</code>:StripByteCounts
+                    <code>0x0117</code>:StripByteCounts
                   </div>
                 </div>
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold mb-3 text-red-600">
+                <h3 className="text-lg font-semibold mb-3">
                   Metadata Tags (Removed)
                 </h3>
                 <div className="grid sm:grid-cols-2 gap-3 text-sm">
@@ -293,18 +288,18 @@ export default function TIFFPage() {
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold mb-3 text-purple-600">
+                <h3 className="text-lg font-semibold mb-3">
                   Pointer Tags (Sub-IFDs)
                 </h3>
                 <div className="grid sm:grid-cols-2 gap-3 text-sm">
-                  <div className="p-3 border border-purple-200 bg-purple-50 rounded">
-                    <code className="text-purple-600">0x8769</code>:ExifIFDPointer
+                  <div className="p-3 border border-border bg-muted/50 rounded">
+                    <code>0x8769</code>:ExifIFDPointer
                   </div>
-                  <div className="p-3 border border-purple-200 bg-purple-50 rounded">
-                    <code className="text-purple-600">0x8825</code>:GPSInfoIFDPointer
+                  <div className="p-3 border border-border bg-muted/50 rounded">
+                    <code>0x8825</code>:GPSInfoIFDPointer
                   </div>
-                  <div className="p-3 border border-purple-200 bg-purple-50 rounded">
-                    <code className="text-purple-600">0xA005</code>:InteroperabilityIFDPointer
+                  <div className="p-3 border border-border bg-muted/50 rounded">
+                    <code>0xA005</code>:InteroperabilityIFDPointer
                   </div>
                 </div>
               </div>
@@ -340,7 +335,7 @@ export default function TIFFPage() {
                 </p>
               </div>
 
-              <div className="border-l-4 border-orange-500 pl-4">
+              <div className="border-l-4 border-border pl-4">
                 <h3 className="font-semibold">Maker Notes</h3>
                 <p className="text-sm text-muted-foreground">
                   Proprietary camera data. Format varies by manufacturer.
@@ -398,11 +393,11 @@ export default function TIFFPage() {
               </div>
             </div>
 
-            <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <h4 className="font-semibold text-blue-800 mb-2">
+            <div className="mt-6 p-4 bg-muted/50 border border-border rounded-lg">
+              <h4 className="font-semibold mb-2">
                 Offset Recalculation
               </h4>
-              <p className="text-sm text-blue-700">
+              <p className="text-sm text-muted-foreground">
                 TIFF files use file offsets extensively. When metadata is
                 removed, PicScrub must recalculate all offsets to maintain file
                 integrity.

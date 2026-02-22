@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Metadata } from "next";
-import { ArrowLeft, Image as ImageIcon } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { HexViewer } from "@/components/HexViewer";
 import { PNGStructure } from "@/components/StructureDiagram";
 
@@ -24,16 +24,11 @@ export default function PNGPage() {
         </Link>
 
         {/* Header */}
-        <div className="flex items-center gap-4 mb-8">
-          <div className="p-3 rounded-lg bg-green-500 text-white">
-            <ImageIcon className="h-8 w-8" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold">PNG Format</h1>
-            <p className="text-muted-foreground">
-              Portable Network Graphics
-            </p>
-          </div>
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold">PNG Format</h1>
+          <p className="text-muted-foreground">
+            Portable Network Graphics
+          </p>
         </div>
 
         {/* Content */}
@@ -84,27 +79,27 @@ export default function PNGPage() {
                   <span>CRC32</span>
                 </div>
                 <div className="grid grid-cols-4 gap-2 text-center">
-                  <span className="bg-orange-100 text-orange-800 rounded px-2 py-1">
+                  <span className="bg-muted text-foreground rounded px-2 py-1">
                     4 bytes
                   </span>
-                  <span className="bg-green-100 text-green-800 rounded px-2 py-1">
+                  <span className="bg-muted text-foreground rounded px-2 py-1">
                     4 bytes
                   </span>
-                  <span className="bg-blue-100 text-blue-800 rounded px-2 py-1">
+                  <span className="bg-muted text-foreground rounded px-2 py-1">
                     Variable
                   </span>
-                  <span className="bg-purple-100 text-purple-800 rounded px-2 py-1">
+                  <span className="bg-muted text-foreground rounded px-2 py-1">
                     4 bytes
                   </span>
                 </div>
               </div>
             </div>
 
-            <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <h4 className="font-semibold text-blue-800 mb-2">
+            <div className="mt-4 p-4 bg-muted/50 border border-border rounded-lg">
+              <h4 className="font-semibold mb-2">
                 Chunk Type Naming Convention
               </h4>
-              <ul className="text-sm text-blue-700 space-y-1">
+              <ul className="text-sm text-muted-foreground space-y-1">
                 <li>
                   • <strong>First letter uppercase</strong> = Critical chunk
                   (must be understood)
@@ -216,7 +211,7 @@ export default function PNGPage() {
                 </p>
               </div>
 
-              <div className="border-l-4 border-yellow-500 pl-4">
+              <div className="border-l-4 border-border pl-4">
                 <h3 className="font-semibold">iCCP:ICC Color Profile</h3>
                 <p className="text-sm text-muted-foreground">
                   Embedded ICC color profile. Compressed with zlib. PicScrub
@@ -244,28 +239,28 @@ export default function PNGPage() {
 
             <div className="grid sm:grid-cols-2 gap-4">
               <div className="p-4 border rounded-lg">
-                <h3 className="font-semibold text-green-600 mb-2">sRGB</h3>
+                <h3 className="font-semibold mb-2">sRGB</h3>
                 <p className="text-sm text-muted-foreground">
                   Indicates sRGB color space. Single byte for rendering intent.
                 </p>
               </div>
 
               <div className="p-4 border rounded-lg">
-                <h3 className="font-semibold text-green-600 mb-2">gAMA</h3>
+                <h3 className="font-semibold mb-2">gAMA</h3>
                 <p className="text-sm text-muted-foreground">
                   Gamma value as 4-byte unsigned integer (scaled by 100,000).
                 </p>
               </div>
 
               <div className="p-4 border rounded-lg">
-                <h3 className="font-semibold text-green-600 mb-2">cHRM</h3>
+                <h3 className="font-semibold mb-2">cHRM</h3>
                 <p className="text-sm text-muted-foreground">
                   Primary chromaticities and white point coordinates.
                 </p>
               </div>
 
               <div className="p-4 border rounded-lg">
-                <h3 className="font-semibold text-green-600 mb-2">sBIT</h3>
+                <h3 className="font-semibold mb-2">sBIT</h3>
                 <p className="text-sm text-muted-foreground">
                   Original sample bit depths for each channel.
                 </p>
@@ -283,18 +278,18 @@ export default function PNGPage() {
 
             <div className="bg-muted/50 p-4 rounded-lg">
               <h4 className="font-semibold mb-2">CRC Calculation</h4>
-              <pre className="text-sm bg-background p-3 rounded border overflow-x-auto">
+              <pre className="text-sm bg-muted text-foreground p-3 rounded border overflow-x-auto">
 {`CRC32 input = chunk_type (4 bytes) + chunk_data (N bytes)
 CRC32 output = 4 bytes appended after chunk data
 
 // PNG uses CRC-32 polynomial: 0xEDB88320`}</pre>
             </div>
 
-            <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <h4 className="font-semibold text-blue-800 mb-2">
+            <div className="mt-4 p-4 bg-muted/50 border border-border rounded-lg">
+              <h4 className="font-semibold mb-2">
                 Why PicScrub Validates CRC
               </h4>
-              <p className="text-sm text-blue-700">
+              <p className="text-sm text-muted-foreground">
                 When reading PNG files, PicScrub validates each chunk&apos;s CRC to
                 ensure data integrity. Corrupted chunks are handled gracefully.
               </p>

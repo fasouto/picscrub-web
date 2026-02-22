@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Metadata } from "next";
-import { ArrowLeft, Smartphone } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { HexViewer } from "@/components/HexViewer";
 import { StructureDiagram } from "@/components/StructureDiagram";
 
@@ -24,16 +24,11 @@ export default function HEICPage() {
         </Link>
 
         {/* Header */}
-        <div className="flex items-center gap-4 mb-8">
-          <div className="p-3 rounded-lg bg-red-500 text-white">
-            <Smartphone className="h-8 w-8" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold">HEIC Format</h1>
-            <p className="text-muted-foreground">
-              High Efficiency Image Container
-            </p>
-          </div>
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold">HEIC Format</h1>
+          <p className="text-muted-foreground">
+            High Efficiency Image Container
+          </p>
         </div>
 
         {/* Content */}
@@ -89,13 +84,13 @@ export default function HEICPage() {
                   <span>Data</span>
                 </div>
                 <div className="grid grid-cols-3 gap-2 text-center">
-                  <span className="bg-orange-100 text-orange-800 rounded px-2 py-1">
+                  <span className="bg-muted text-foreground rounded px-2 py-1">
                     4 bytes (BE)
                   </span>
-                  <span className="bg-blue-100 text-blue-800 rounded px-2 py-1">
+                  <span className="bg-muted text-foreground rounded px-2 py-1">
                     4 bytes
                   </span>
-                  <span className="bg-green-100 text-green-800 rounded px-2 py-1">
+                  <span className="bg-muted text-foreground rounded px-2 py-1">
                     Size - 8
                   </span>
                 </div>
@@ -118,7 +113,7 @@ export default function HEICPage() {
             </p>
 
             <div className="space-y-4">
-              <div className="border-l-4 border-blue-500 pl-4">
+              <div className="border-l-4 border-border pl-4">
                 <h3 className="font-semibold">ftyp:File Type</h3>
                 <p className="text-sm text-muted-foreground mb-2">
                   First box in file. Contains major brand and compatible brands.
@@ -139,13 +134,13 @@ export default function HEICPage() {
                 </div>
               </div>
 
-              <div className="border-l-4 border-purple-500 pl-4">
+              <div className="border-l-4 border-border pl-4">
                 <h3 className="font-semibold">meta:Metadata Container</h3>
                 <p className="text-sm text-muted-foreground mb-2">
                   Contains all metadata including item locations, properties,
                   and associations. This is where EXIF/XMP data lives.
                 </p>
-                <pre className="text-xs font-mono bg-muted p-3 rounded overflow-x-auto">
+                <pre className="text-xs font-mono bg-muted text-foreground p-3 rounded overflow-x-auto">
 {`meta (metadata container)
 ├── hdlr  (handler reference)
 ├── pitm  (primary item ID)
@@ -202,7 +197,7 @@ export default function HEICPage() {
                 </p>
               </div>
 
-              <div className="border-l-4 border-yellow-500 pl-4">
+              <div className="border-l-4 border-border pl-4">
                 <h3 className="font-semibold">ICC Profile</h3>
                 <p className="text-sm text-muted-foreground">
                   Color profile stored as &quot;colr&quot; box with type &quot;prof&quot;.
@@ -210,11 +205,11 @@ export default function HEICPage() {
               </div>
             </div>
 
-            <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <h4 className="font-semibold text-blue-800 mb-2">
+            <div className="mt-6 p-4 bg-muted/50 border border-border rounded-lg">
+              <h4 className="font-semibold mb-2">
                 Why Offsets Matter
               </h4>
-              <p className="text-sm text-blue-700">
+              <p className="text-sm text-muted-foreground">
                 The iloc box contains precise byte offsets pointing into mdat.
                 If any box sizes change (e.g., from removing metadata), these
                 offsets must be recalculated or the file becomes unreadable.
@@ -230,11 +225,11 @@ export default function HEICPage() {
               video/image storage, not for easy metadata manipulation.
             </p>
 
-            <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg mb-6">
-              <h4 className="font-semibold text-yellow-800 mb-2">
+            <div className="p-4 bg-muted/50 border border-border rounded-lg mb-6">
+              <h4 className="font-semibold mb-2">
                 The Challenge
               </h4>
-              <p className="text-sm text-yellow-700">
+              <p className="text-sm text-muted-foreground">
                 HEIC&apos;s offset-based structure makes byte removal risky.
                 The iloc box contains precise byte offsets pointing into mdat.
                 If you remove even a single box, those offsets become wrong,

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Metadata } from "next";
-import { ArrowLeft, FileImage } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { HexViewer } from "@/components/HexViewer";
 import { JPEGStructure } from "@/components/StructureDiagram";
 
@@ -24,16 +24,11 @@ export default function JPEGPage() {
         </Link>
 
         {/* Header */}
-        <div className="flex items-center gap-4 mb-8">
-          <div className="p-3 rounded-lg bg-orange-500 text-white">
-            <FileImage className="h-8 w-8" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold">JPEG Format</h1>
-            <p className="text-muted-foreground">
-              Joint Photographic Experts Group
-            </p>
-          </div>
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold">JPEG Format</h1>
+          <p className="text-muted-foreground">
+            Joint Photographic Experts Group
+          </p>
         </div>
 
         {/* Content */}
@@ -106,8 +101,8 @@ export default function JPEGPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className="bg-blue-50"><td className="p-2 border font-mono">FF D8</td><td className="p-2 border">SOI</td><td className="p-2 border">Start of Image</td></tr>
-                    <tr className="bg-blue-50"><td className="p-2 border font-mono">FF D9</td><td className="p-2 border">EOI</td><td className="p-2 border">End of Image</td></tr>
+                    <tr><td className="p-2 border font-mono">FF D8</td><td className="p-2 border">SOI</td><td className="p-2 border">Start of Image</td></tr>
+                    <tr><td className="p-2 border font-mono">FF D9</td><td className="p-2 border">EOI</td><td className="p-2 border">End of Image</td></tr>
                     <tr><td className="p-2 border font-mono">FF C0</td><td className="p-2 border">SOF0</td><td className="p-2 border">Start of Frame (Baseline DCT)</td></tr>
                     <tr><td className="p-2 border font-mono">FF C2</td><td className="p-2 border">SOF2</td><td className="p-2 border">Start of Frame (Progressive DCT)</td></tr>
                     <tr><td className="p-2 border font-mono">FF C4</td><td className="p-2 border">DHT</td><td className="p-2 border">Define Huffman Table</td></tr>
@@ -117,7 +112,7 @@ export default function JPEGPage() {
                     <tr className="bg-red-50"><td className="p-2 border font-mono">FF FE</td><td className="p-2 border">COM</td><td className="p-2 border">Comment (metadata)</td></tr>
                     <tr className="bg-red-50"><td className="p-2 border font-mono">FF E0</td><td className="p-2 border">APP0</td><td className="p-2 border">JFIF marker</td></tr>
                     <tr className="bg-red-50"><td className="p-2 border font-mono">FF E1</td><td className="p-2 border">APP1</td><td className="p-2 border">EXIF / XMP marker</td></tr>
-                    <tr className="bg-yellow-50"><td className="p-2 border font-mono">FF E2</td><td className="p-2 border">APP2</td><td className="p-2 border">ICC Profile / MPF</td></tr>
+                    <tr><td className="p-2 border font-mono">FF E2</td><td className="p-2 border">APP2</td><td className="p-2 border">ICC Profile / MPF</td></tr>
                     <tr className="bg-red-50"><td className="p-2 border font-mono">FF ED</td><td className="p-2 border">APP13</td><td className="p-2 border">IPTC / Photoshop</td></tr>
                     <tr><td className="p-2 border font-mono">FF EE</td><td className="p-2 border">APP14</td><td className="p-2 border">Adobe color transform</td></tr>
                   </tbody>
@@ -143,7 +138,7 @@ export default function JPEGPage() {
 
             <div className="grid md:grid-cols-2 gap-4">
               <div className="p-4 border rounded-lg">
-                <h3 className="font-semibold text-orange-600 mb-2">
+                <h3 className="font-semibold mb-2">
                   APP0:JFIF
                 </h3>
                 <p className="text-sm text-muted-foreground mb-3">
@@ -158,7 +153,7 @@ export default function JPEGPage() {
               </div>
 
               <div className="p-4 border rounded-lg">
-                <h3 className="font-semibold text-green-600 mb-2">
+                <h3 className="font-semibold mb-2">
                   APP1:EXIF
                 </h3>
                 <p className="text-sm text-muted-foreground mb-3">
@@ -191,7 +186,7 @@ export default function JPEGPage() {
             </p>
 
             <div className="space-y-4">
-              <div className="border-l-4 border-orange-500 pl-4">
+              <div className="border-l-4 border-border pl-4">
                 <h3 className="font-semibold">
                   APP0 (0xFFE0):JFIF
                 </h3>
@@ -216,7 +211,7 @@ export default function JPEGPage() {
                 </p>
               </div>
 
-              <div className="border-l-4 border-blue-500 pl-4">
+              <div className="border-l-4 border-border pl-4">
                 <h3 className="font-semibold">
                   APP1 (0xFFE1):XMP
                 </h3>
@@ -241,7 +236,7 @@ export default function JPEGPage() {
                 </details>
               </div>
 
-              <div className="border-l-4 border-blue-400 pl-4">
+              <div className="border-l-4 border-border pl-4">
                 <h3 className="font-semibold">
                   APP1 (0xFFE1):Extended XMP
                 </h3>
@@ -252,7 +247,7 @@ export default function JPEGPage() {
                 </p>
               </div>
 
-              <div className="border-l-4 border-purple-400 pl-4">
+              <div className="border-l-4 border-border pl-4">
                 <h3 className="font-semibold">
                   APP2 (0xFFE2):MPF
                 </h3>
@@ -262,7 +257,7 @@ export default function JPEGPage() {
                 </p>
               </div>
 
-              <div className="border-l-4 border-purple-500 pl-4">
+              <div className="border-l-4 border-border pl-4">
                 <h3 className="font-semibold">
                   APP2 (0xFFE2):ICC Profile
                 </h3>
@@ -275,7 +270,7 @@ export default function JPEGPage() {
                 </p>
               </div>
 
-              <div className="border-l-4 border-yellow-600 pl-4">
+              <div className="border-l-4 border-border pl-4">
                 <h3 className="font-semibold">
                   APP13 (0xFFED):IPTC/Photoshop
                 </h3>
@@ -286,7 +281,7 @@ export default function JPEGPage() {
                 </p>
               </div>
 
-              <div className="border-l-4 border-pink-500 pl-4">
+              <div className="border-l-4 border-border pl-4">
                 <h3 className="font-semibold">
                   APP14 (0xFFEE):Adobe
                 </h3>
@@ -342,16 +337,16 @@ export default function JPEGPage() {
                   <span>Value/Offset</span>
                 </div>
                 <div className="grid grid-cols-4 gap-2 text-center">
-                  <span className="bg-blue-100 text-blue-800 rounded px-2 py-1">
+                  <span className="bg-muted text-foreground rounded px-2 py-1">
                     2 bytes
                   </span>
-                  <span className="bg-green-100 text-green-800 rounded px-2 py-1">
+                  <span className="bg-muted text-foreground rounded px-2 py-1">
                     2 bytes
                   </span>
-                  <span className="bg-yellow-100 text-yellow-800 rounded px-2 py-1">
+                  <span className="bg-muted text-foreground rounded px-2 py-1">
                     4 bytes
                   </span>
-                  <span className="bg-purple-100 text-purple-800 rounded px-2 py-1">
+                  <span className="bg-muted text-foreground rounded px-2 py-1">
                     4 bytes
                   </span>
                 </div>
@@ -362,22 +357,22 @@ export default function JPEGPage() {
               <h3 className="font-semibold">Key IFD Entries</h3>
               <div className="grid sm:grid-cols-2 gap-3 text-sm">
                 <div className="p-3 border rounded">
-                  <code className="text-blue-600">0x010F</code>:Make
+                  <code>0x010F</code>:Make
                 </div>
                 <div className="p-3 border rounded">
-                  <code className="text-blue-600">0x0110</code>:Model
+                  <code>0x0110</code>:Model
                 </div>
                 <div className="p-3 border rounded">
-                  <code className="text-blue-600">0x0132</code>:DateTime
+                  <code>0x0132</code>:DateTime
                 </div>
                 <div className="p-3 border rounded">
-                  <code className="text-blue-600">0x8769</code>:ExifIFDPointer
+                  <code>0x8769</code>:ExifIFDPointer
                 </div>
                 <div className="p-3 border rounded">
                   <code className="text-red-600">0x8825</code>:GPSInfoIFDPointer
                 </div>
                 <div className="p-3 border rounded">
-                  <code className="text-blue-600">0x927C</code>:MakerNote
+                  <code>0x927C</code>:MakerNote
                 </div>
               </div>
             </div>
@@ -608,17 +603,17 @@ export default function JPEGPage() {
               <div className="p-3 border border-red-200 bg-red-50 rounded">
                 <code className="text-red-600">0x0276</code> Contact
               </div>
-              <div className="p-3 border border-yellow-200 bg-yellow-50 rounded">
-                <code className="text-yellow-600">0x0237</code> Date Created
+              <div className="p-3 border border-border bg-muted/50 rounded">
+                <code>0x0237</code> Date Created
               </div>
-              <div className="p-3 border border-yellow-200 bg-yellow-50 rounded">
-                <code className="text-yellow-600">0x023C</code> Time Created
-              </div>
-              <div className="p-3 border rounded">
-                <code className="text-blue-600">0x0278</code> Caption/Abstract
+              <div className="p-3 border border-border bg-muted/50 rounded">
+                <code>0x023C</code> Time Created
               </div>
               <div className="p-3 border rounded">
-                <code className="text-blue-600">0x0219</code> Keywords
+                <code>0x0278</code> Caption/Abstract
+              </div>
+              <div className="p-3 border rounded">
+                <code>0x0219</code> Keywords
               </div>
             </div>
           </section>

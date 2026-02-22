@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Metadata } from "next";
-import { ArrowLeft, Layers } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { HexViewer } from "@/components/HexViewer";
 import { WebPStructure } from "@/components/StructureDiagram";
 
@@ -24,14 +24,9 @@ export default function WebPPage() {
         </Link>
 
         {/* Header */}
-        <div className="flex items-center gap-4 mb-8">
-          <div className="p-3 rounded-lg bg-blue-500 text-white">
-            <Layers className="h-8 w-8" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold">WebP Format</h1>
-            <p className="text-muted-foreground">Google&apos;s Modern Image Format</p>
-          </div>
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold">WebP Format</h1>
+          <p className="text-muted-foreground">Google&apos;s Modern Image Format</p>
         </div>
 
         {/* Content */}
@@ -79,13 +74,13 @@ export default function WebPPage() {
                   <span>Data</span>
                 </div>
                 <div className="grid grid-cols-3 gap-2 text-center">
-                  <span className="bg-blue-100 text-blue-800 rounded px-2 py-1">
+                  <span className="bg-muted text-foreground rounded px-2 py-1">
                     4 bytes
                   </span>
-                  <span className="bg-orange-100 text-orange-800 rounded px-2 py-1">
+                  <span className="bg-muted text-foreground rounded px-2 py-1">
                     4 bytes (LE)
                   </span>
-                  <span className="bg-green-100 text-green-800 rounded px-2 py-1">
+                  <span className="bg-muted text-foreground rounded px-2 py-1">
                     Variable
                   </span>
                 </div>
@@ -96,9 +91,9 @@ export default function WebPPage() {
               </p>
             </div>
 
-            <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <h4 className="font-semibold text-blue-800 mb-2">Key Offsets</h4>
-              <ul className="text-sm text-blue-700 space-y-1 font-mono">
+            <div className="mt-6 p-4 bg-muted/50 border border-border rounded-lg">
+              <h4 className="font-semibold mb-2">Key Offsets</h4>
+              <ul className="text-sm text-muted-foreground space-y-1 font-mono">
                 <li>• Sub-chunk start: <strong>12 bytes</strong> (after RIFF + size + WEBP)</li>
                 <li>• Chunk header: <strong>8 bytes</strong> (4-byte FourCC + 4-byte size)</li>
                 <li>• Size field offset: <strong>+4</strong> from chunk start (little-endian)</li>
@@ -132,7 +127,7 @@ export default function WebPPage() {
                 </p>
               </div>
 
-              <div className="border-l-4 border-purple-500 pl-4">
+              <div className="border-l-4 border-border pl-4">
                 <h3 className="font-semibold">VP8X:Extended Format</h3>
                 <p className="text-sm text-muted-foreground">
                   Indicates presence of optional features: animation, alpha
@@ -141,7 +136,7 @@ export default function WebPPage() {
                 </p>
               </div>
 
-              <div className="border-l-4 border-blue-500 pl-4">
+              <div className="border-l-4 border-border pl-4">
                 <h3 className="font-semibold">ALPH:Alpha Channel</h3>
                 <p className="text-sm text-muted-foreground">
                   Separate alpha channel data. Can be lossless or lossy
@@ -149,7 +144,7 @@ export default function WebPPage() {
                 </p>
               </div>
 
-              <div className="border-l-4 border-orange-500 pl-4">
+              <div className="border-l-4 border-border pl-4">
                 <h3 className="font-semibold">ANIM/ANMF:Animation</h3>
                 <p className="text-sm text-muted-foreground">
                   ANIM contains global animation parameters. ANMF chunks contain
@@ -190,7 +185,7 @@ export default function WebPPage() {
                 </p>
               </div>
 
-              <div className="border-l-4 border-yellow-500 pl-4">
+              <div className="border-l-4 border-border pl-4">
                 <h3 className="font-semibold">ICCP:ICC Color Profile</h3>
                 <p className="text-sm text-muted-foreground">
                   ICC color profile for color management. PicScrub preserves by
@@ -244,7 +239,7 @@ export default function WebPPage() {
                   <span>Alpha channel present</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded border w-20 text-center">
+                  <span className="bg-muted text-foreground px-2 py-1 rounded border w-20 text-center">
                     Bit 5
                   </span>
                   <span>ICC profile present</span>
@@ -252,11 +247,11 @@ export default function WebPPage() {
               </div>
             </div>
 
-            <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <h4 className="font-semibold text-blue-800 mb-2">
+            <div className="mt-4 p-4 bg-muted/50 border border-border rounded-lg">
+              <h4 className="font-semibold mb-2">
                 Why Flags Matter
               </h4>
-              <p className="text-sm text-blue-700">
+              <p className="text-sm text-muted-foreground">
                 When PicScrub removes EXIF/XMP chunks, it must also update the
                 VP8X flags to reflect their absence. Otherwise, decoders may
                 expect data that isn&apos;t there.
@@ -357,7 +352,7 @@ export default function WebPPage() {
 
             <div className="grid md:grid-cols-2 gap-4">
               <div className="p-4 border rounded-lg">
-                <h3 className="font-semibold text-green-600 mb-2">
+                <h3 className="font-semibold mb-2">
                   Simple WebP
                 </h3>
                 <p className="text-sm text-muted-foreground mb-3">
@@ -369,7 +364,7 @@ export default function WebPPage() {
               </div>
 
               <div className="p-4 border rounded-lg">
-                <h3 className="font-semibold text-blue-600 mb-2">
+                <h3 className="font-semibold mb-2">
                   Extended WebP
                 </h3>
                 <p className="text-sm text-muted-foreground mb-3">
