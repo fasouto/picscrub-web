@@ -10,9 +10,23 @@ export const metadata: Metadata = {
     "Learn how PicScrub removes metadata from images. Understand the privacy risks of image metadata and how we solve them.",
 };
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  headline: "How PicScrub Works",
+  description:
+    "Learn how PicScrub removes metadata from images. Understand the privacy risks of image metadata and how we solve them.",
+  url: "https://picscrub.com/how-it-works",
+  author: { "@type": "Organization", name: "PicScrub", url: "https://picscrub.com" },
+};
+
 export default function HowItWorksPage() {
   return (
     <div className="container mx-auto px-4 py-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <article className="max-w-3xl mx-auto">
         {/* Header */}
         <header className="text-center mb-12">

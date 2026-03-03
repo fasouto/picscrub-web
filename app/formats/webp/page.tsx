@@ -10,9 +10,34 @@ export const metadata: Metadata = {
     "Technical guide to WebP file structure, RIFF container, VP8X flags, and how PicScrub removes metadata while preserving image quality.",
 };
 
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    headline: "WebP Format Deep Dive",
+    description:
+      "Technical guide to WebP file structure, RIFF container, VP8X flags, and how PicScrub removes metadata while preserving image quality.",
+    url: "https://picscrub.com/formats/webp",
+    author: { "@type": "Organization", name: "PicScrub", url: "https://picscrub.com" },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://picscrub.com" },
+      { "@type": "ListItem", position: 2, name: "Formats", item: "https://picscrub.com/formats" },
+      { "@type": "ListItem", position: 3, name: "WebP", item: "https://picscrub.com/formats/webp" },
+    ],
+  },
+];
+
 export default function WebPPage() {
   return (
     <div className="container mx-auto px-4 py-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <article className="max-w-4xl mx-auto">
         {/* Breadcrumb */}
         <Link

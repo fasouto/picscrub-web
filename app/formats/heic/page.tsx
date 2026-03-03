@@ -10,9 +10,34 @@ export const metadata: Metadata = {
     "Technical guide to HEIC file structure, ISOBMFF container, metadata boxes, and how PicScrub handles metadata removal.",
 };
 
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    headline: "HEIC Format Deep Dive",
+    description:
+      "Technical guide to HEIC file structure, ISOBMFF container, metadata boxes, and how PicScrub handles metadata removal.",
+    url: "https://picscrub.com/formats/heic",
+    author: { "@type": "Organization", name: "PicScrub", url: "https://picscrub.com" },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://picscrub.com" },
+      { "@type": "ListItem", position: 2, name: "Formats", item: "https://picscrub.com/formats" },
+      { "@type": "ListItem", position: 3, name: "HEIC", item: "https://picscrub.com/formats/heic" },
+    ],
+  },
+];
+
 export default function HEICPage() {
   return (
     <div className="container mx-auto px-4 py-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <article className="max-w-4xl mx-auto">
         {/* Breadcrumb */}
         <Link

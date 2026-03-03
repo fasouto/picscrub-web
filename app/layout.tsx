@@ -64,6 +64,13 @@ const jsonLd = {
     "Strip EXIF data, Remove GPS location, Remove camera info, Remove timestamps, 100% client-side processing, Supports JPEG, PNG, WebP, HEIC, GIF, TIFF, SVG, RAW",
 };
 
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "PicScrub",
+  url: "https://picscrub.com",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -75,6 +82,10 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
       </head>
       <body

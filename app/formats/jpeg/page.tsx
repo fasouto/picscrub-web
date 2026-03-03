@@ -10,9 +10,34 @@ export const metadata: Metadata = {
     "Technical guide to JPEG file structure, EXIF metadata, APP markers, and how PicScrub removes metadata while preserving image quality.",
 };
 
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    headline: "JPEG Format Deep Dive",
+    description:
+      "Technical guide to JPEG file structure, EXIF metadata, APP markers, and how PicScrub removes metadata while preserving image quality.",
+    url: "https://picscrub.com/formats/jpeg",
+    author: { "@type": "Organization", name: "PicScrub", url: "https://picscrub.com" },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://picscrub.com" },
+      { "@type": "ListItem", position: 2, name: "Formats", item: "https://picscrub.com/formats" },
+      { "@type": "ListItem", position: 3, name: "JPEG", item: "https://picscrub.com/formats/jpeg" },
+    ],
+  },
+];
+
 export default function JPEGPage() {
   return (
     <div className="container mx-auto px-4 py-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <article className="max-w-4xl mx-auto">
         {/* Breadcrumb */}
         <Link
