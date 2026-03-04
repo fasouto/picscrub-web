@@ -46,30 +46,31 @@ export const metadata: Metadata = {
   },
 };
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  name: "PicScrub",
-  url: "https://picscrub.com",
-  applicationCategory: "UtilitiesApplication",
-  operatingSystem: "Web, Windows, macOS, Linux",
-  description:
-    "Privacy-first image metadata removal. Strip EXIF, GPS, XMP, IPTC, and other sensitive data from your images. 100% client-side, lossless, supports 9 formats.",
-  offers: {
-    "@type": "Offer",
-    price: "0",
-    priceCurrency: "USD",
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "PicScrub",
+    url: "https://picscrub.com",
+    applicationCategory: "UtilitiesApplication",
+    operatingSystem: "Web, Windows, macOS, Linux",
+    description:
+      "Privacy-first image metadata removal. Strip EXIF, GPS, XMP, IPTC, and other sensitive data from your images. 100% client-side, lossless, supports 9 formats.",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+    },
+    featureList:
+      "Strip EXIF data, Remove GPS location, Remove camera info, Remove timestamps, 100% client-side processing, Supports JPEG, PNG, WebP, HEIC, GIF, TIFF, SVG, RAW",
   },
-  featureList:
-    "Strip EXIF data, Remove GPS location, Remove camera info, Remove timestamps, 100% client-side processing, Supports JPEG, PNG, WebP, HEIC, GIF, TIFF, SVG, RAW",
-};
-
-const websiteJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  name: "PicScrub",
-  url: "https://picscrub.com",
-};
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "PicScrub",
+    url: "https://picscrub.com",
+  },
+];
 
 export default function RootLayout({
   children,
@@ -81,11 +82,9 @@ export default function RootLayout({
       <head>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(jsonLd).replace(/</g, "\u003c"),
+          }}
         />
       </head>
       <body

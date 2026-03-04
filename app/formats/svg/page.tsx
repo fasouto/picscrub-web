@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Metadata } from "next";
 import { ArrowLeft } from "lucide-react";
+import { JsonLd } from "@/components/JsonLd";
 
 export const metadata: Metadata = {
   title: "SVG Format Deep Dive - PicScrub",
@@ -32,10 +33,7 @@ const jsonLd = [
 export default function SVGPage() {
   return (
     <div className="container mx-auto px-4 py-12">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd id="svg-schema" data={jsonLd} />
       <article className="max-w-4xl mx-auto">
         {/* Breadcrumb */}
         <Link

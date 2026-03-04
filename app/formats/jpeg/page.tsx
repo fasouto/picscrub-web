@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import { ArrowLeft } from "lucide-react";
 import { HexViewer } from "@/components/HexViewer";
 import { JPEGStructure } from "@/components/StructureDiagram";
+import { JsonLd } from "@/components/JsonLd";
 
 export const metadata: Metadata = {
   title: "JPEG Format Deep Dive - PicScrub",
@@ -34,10 +35,7 @@ const jsonLd = [
 export default function JPEGPage() {
   return (
     <div className="container mx-auto px-4 py-12">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd id="jpeg-schema" data={jsonLd} />
       <article className="max-w-4xl mx-auto">
         {/* Breadcrumb */}
         <Link

@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Github, MessageCircle } from "lucide-react";
+import { JsonLd } from "@/components/JsonLd";
 
 export const metadata: Metadata = {
   title: "FAQ - PicScrub",
@@ -146,10 +147,7 @@ const jsonLd = {
 export default function FAQPage() {
   return (
     <div className="container mx-auto px-4 py-12">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd id="faq-schema" data={jsonLd} />
       <article className="max-w-3xl mx-auto">
         {/* Header */}
         <header className="text-center mb-12">
