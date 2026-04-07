@@ -2,7 +2,7 @@
   "name": "picscrub-web",
   "version": "0.1.0",
   "private": true,
-  "description": "picscrub.com — Strip metadata from images entirely in your browser",
+  "description": "picscrub.com - Strip metadata from images entirely in your browser",
   "author": "Fabio Souto",
   "license": "MIT",
   "homepage": "https://picscrub.com",

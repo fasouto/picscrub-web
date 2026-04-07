@@ -82,7 +82,7 @@ export default function PrivacyPage() {
 
         <p>
           This website uses Google Fonts which are self-hosted via Next.js. Font files
-          are served directly from our infrastructure — no requests are made to
+          are served directly from our infrastructure - no requests are made to
           Google&apos;s servers when you visit this site.
         </p>
 
