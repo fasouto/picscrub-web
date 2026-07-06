@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: "GIF Format Deep Dive - PicScrub",
   description:
     "Technical guide to GIF file structure, extension blocks, animation data, and how PicScrub removes metadata while preserving animations.",
+  alternates: { canonical: "/formats/gif" },
 };
 
 const jsonLd = [

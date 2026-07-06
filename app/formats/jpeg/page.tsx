@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: "JPEG Format Deep Dive - PicScrub",
   description:
     "Technical guide to JPEG file structure, EXIF metadata, APP markers, and how PicScrub removes metadata while preserving image quality.",
+  alternates: { canonical: "/formats/jpeg" },
 };
 
 const jsonLd = [

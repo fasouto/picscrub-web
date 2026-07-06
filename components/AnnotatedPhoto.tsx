@@ -88,7 +88,7 @@ function AnnotationLabel({ text, position }: { text: string; position: string })
       className={`absolute ${positionClasses[position]} z-10`}
     >
       <span
-        className="font-[family-name:var(--font-caveat)] text-[oklch(0.738_0.173_81)] text-2xl font-bold whitespace-nowrap"
+        className="font-[family-name:var(--font-caveat)] text-annotation text-2xl font-bold whitespace-nowrap"
       >
         {text}
       </span>

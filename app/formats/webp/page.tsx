@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: "WebP Format Deep Dive - PicScrub",
   description:
     "Technical guide to WebP file structure, RIFF container, VP8X flags, and how PicScrub removes metadata while preserving image quality.",
+  alternates: { canonical: "/formats/webp" },
 };
 
 const jsonLd = [

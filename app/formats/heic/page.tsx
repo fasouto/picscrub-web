@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: "HEIC Format Deep Dive - PicScrub",
   description:
     "Technical guide to HEIC file structure, ISOBMFF container, metadata boxes, and how PicScrub handles metadata removal.",
+  alternates: { canonical: "/formats/heic" },
 };
 
 const jsonLd = [

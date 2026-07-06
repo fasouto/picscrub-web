@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "SVG Format Deep Dive - PicScrub",
   description:
     "Technical guide to SVG file structure, XML metadata, editor namespaces, and how PicScrub removes metadata while preserving vector graphics.",
+  alternates: { canonical: "/formats/svg" },
 };
 
 const jsonLd = [

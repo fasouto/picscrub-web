@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: "RAW Format Deep Dive - PicScrub",
   description:
     "Technical guide to RAW camera formats including DNG, CR2, NEF, and ARW. Learn about TIFF-based structure and metadata removal.",
+  alternates: { canonical: "/formats/raw" },
 };
 
 const jsonLd = [

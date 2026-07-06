@@ -14,6 +14,7 @@ export const metadata: Metadata = {
   title: "FAQ - PicScrub",
   description:
     "Frequently asked questions about PicScrub image metadata removal. Learn about privacy, quality, and usage.",
+  alternates: { canonical: "/faq" },
 };
 
 const faqs = [

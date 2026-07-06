@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Caveat } from "next/font/google";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -22,6 +23,10 @@ const caveat = Caveat({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://picscrub.com"),
+  alternates: {
+    canonical: "/",
+  },
   title: "PicScrub - Strip Metadata from Images",
   description:
     "Privacy-first image metadata removal. Strip EXIF, GPS, XMP, IPTC, and other sensitive data from your images. 100% client-side, lossless, supports 9 formats.",
@@ -90,6 +95,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${caveat.variable} antialiased min-h-screen flex flex-col`}
       >
+        <ServiceWorkerRegister />
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

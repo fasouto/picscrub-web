@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: "How It Works - PicScrub",
   description:
     "Learn how PicScrub removes metadata from images. Understand the privacy risks of image metadata and how we solve them.",
+  alternates: { canonical: "/how-it-works" },
 };
 
 const jsonLd = {
@@ -287,7 +288,7 @@ function MetadataItem({
         <p className="font-semibold mb-1">{label}</p>
         <p className="text-muted-foreground">{description}</p>
       </div>
-      <span className="font-[family-name:var(--font-caveat)] text-[oklch(0.738_0.173_81)] text-2xl font-bold whitespace-nowrap self-center -rotate-2">
+      <span className="font-[family-name:var(--font-caveat)] text-annotation text-2xl font-bold whitespace-nowrap self-center -rotate-2">
         ← {annotation}
       </span>
     </div>

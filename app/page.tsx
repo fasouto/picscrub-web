@@ -25,6 +25,11 @@ export default function HomePage() {
             {/* Dropzone - Primary focus */}
             <FileDropzone />
 
+            <p className="text-sm text-muted-foreground text-center mt-4">
+              Runs entirely in your browser &mdash; your photos never leave your
+              device. It even works offline.
+            </p>
+
           </div>
         </div>
       </section>

@@ -3,6 +3,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Privacy Policy - PicScrub",
   description: "Privacy policy for PicScrub image metadata removal tool.",
+  alternates: { canonical: "/privacy" },
 };
 
 export default function PrivacyPage() {

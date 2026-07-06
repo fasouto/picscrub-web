@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: "TIFF Format Deep Dive - PicScrub",
   description:
     "Technical guide to TIFF file structure, IFD entries, tag types, and how PicScrub removes metadata while preserving image quality.",
+  alternates: { canonical: "/formats/tiff" },
 };
 
 const jsonLd = [

@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Image Format Guides - PicScrub",
   description:
     "Deep-dive technical guides for image formats: JPEG, PNG, WebP, GIF, SVG, TIFF, HEIC, and RAW. Learn about binary structure, metadata locations, and how PicScrub processes each format.",
+  alternates: { canonical: "/formats" },
 };
 
 const formats = [

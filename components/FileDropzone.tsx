@@ -1,11 +1,13 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { Upload, Image as ImageIcon, Loader2, AlertCircle, Sparkles, X, Download, Check } from "lucide-react";
+import { Upload, Image as ImageIcon, Loader2, AlertCircle, Sparkles, X, Download, Check, FileArchive } from "lucide-react";
+import { zipSync } from "fflate";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { processImage, readMetadata, createDownloadUrl, formatFileSize, type ProcessedImage, type ImageMetadata, type RemoveOptions } from "@/lib/picscrub";
+import { readMetadata, createDownloadUrl, formatFileSize, type ProcessedImage, type ImageMetadata, type RemoveOptions, type SupportedFormat } from "@/lib/picscrub";
+import { scrubImage } from "@/lib/scrubClient";
 import { MetadataViewer } from "./MetadataViewer";
 
 const ACCEPTED_FORMATS = {
@@ -37,10 +39,11 @@ interface ProcessedFile {
   downloaded: boolean;
 }
 
-type FileState =
+type FileEntry = { id: string } & (
   | { status: "pending"; data: PendingFile }
   | { status: "processing"; data: PendingFile }
-  | { status: "processed"; data: ProcessedFile };
+  | { status: "processed"; data: ProcessedFile }
+);
 
 const PRESERVE_OPTIONS: { key: keyof RemoveOptions; label: string }[] = [
   { key: "preserveColorProfile", label: "Keep color profile" },
@@ -80,22 +83,42 @@ async function detectApplicableOptions(
   return result;
 }
 
+function cleanedFileName(originalName: string, format: SupportedFormat): string {
+  const extension = format === "jpeg" ? "jpg" : format;
+  return originalName.replace(/\.[^/.]+$/, "") + `-picscrub.${extension}`;
+}
+
+function triggerDownload(url: string, name: string) {
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = name;
+  link.click();
+}
+
 export function FileDropzone() {
-  const [files, setFiles] = useState<FileState[]>([]);
+  const [files, setFiles] = useState<FileEntry[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  const updateFileOption = (index: number, key: keyof RemoveOptions, value: boolean) => {
-    setFiles((prev) => {
-      const updated = [...prev];
-      const file = updated[index];
-      if (file?.status === "pending") {
-        updated[index] = {
-          ...file,
-          data: { ...file.data, options: { ...file.data.options, [key]: value } },
-        };
-      }
-      return updated;
-    });
+  // Mirror of the latest state for async flows (metadata loading, batch
+  // processing) so they never act on a stale snapshot.
+  const filesRef = useRef<FileEntry[]>(files);
+  useEffect(() => {
+    filesRef.current = files;
+  }, [files]);
+
+  const updateEntry = useCallback((id: string, update: (entry: FileEntry) => FileEntry) => {
+    setFiles((prev) => prev.map((entry) => (entry.id === id ? update(entry) : entry)));
+  }, []);
+
+  const updateFileOption = (id: string, key: keyof RemoveOptions, value: boolean) => {
+    updateEntry(id, (entry) =>
+      entry.status === "pending"
+        ? {
+            ...entry,
+            data: { ...entry.data, options: { ...entry.data.options, [key]: value } },
+          }
+        : entry,
+    );
   };
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
@@ -103,7 +126,8 @@ export function FileDropzone() {
     setError(null);
 
     // Create pending files with previews
-    const newFiles: FileState[] = acceptedFiles.map((file) => ({
+    const newEntries: FileEntry[] = acceptedFiles.map((file) => ({
+      id: crypto.randomUUID(),
       status: "pending" as const,
       data: {
         file,
@@ -115,148 +139,165 @@ export function FileDropzone() {
       },
     }));
 
-    setFiles((prev) => [...prev, ...newFiles]);
+    setFiles((prev) => [...prev, ...newEntries]);
 
     // Read metadata for each file
-    for (let i = 0; i < acceptedFiles.length; i++) {
-      const file = acceptedFiles[i];
+    for (const entry of newEntries) {
       try {
-        const metadata = await readMetadata(file);
-        const applicable = await detectApplicableOptions(metadata, file);
+        const metadata = await readMetadata(entry.data.file);
+        const applicable = await detectApplicableOptions(metadata, entry.data.file);
         const defaultOptions: RemoveOptions = Object.fromEntries(
           applicable.map((key) => [key, true]),
         );
-        setFiles((prev) => {
-          const updated = [...prev];
-          const idx = prev.length - acceptedFiles.length + i;
-          if (updated[idx]?.status === "pending") {
-            updated[idx] = {
-              status: "pending",
-              data: {
-                ...updated[idx].data,
-                metadata,
-                loadingMetadata: false,
-                applicableOptions: applicable,
-                options: defaultOptions,
-              },
-            };
-          }
-          return updated;
-        });
+        setFiles((prev) =>
+          prev.map((existing) =>
+            existing.id === entry.id && existing.status === "pending"
+              ? {
+                  ...existing,
+                  data: {
+                    ...existing.data,
+                    metadata,
+                    loadingMetadata: false,
+                    applicableOptions: applicable,
+                    options: defaultOptions,
+                  },
+                }
+              : existing,
+          ),
+        );
       } catch {
-        setFiles((prev) => {
-          const updated = [...prev];
-          const idx = prev.length - acceptedFiles.length + i;
-          if (updated[idx]?.status === "pending") {
-            updated[idx] = {
-              status: "pending",
-              data: {
-                ...updated[idx].data,
-                loadingMetadata: false,
-              },
-            };
-          }
-          return updated;
-        });
+        setFiles((prev) =>
+          prev.map((existing) =>
+            existing.id === entry.id && existing.status === "pending"
+              ? { ...existing, data: { ...existing.data, loadingMetadata: false } }
+              : existing,
+          ),
+        );
       }
     }
   }, []);
 
-  const processFile = async (index: number) => {
-    const fileState = files[index];
-    if (fileState?.status !== "pending") return;
+  // Paste an image (e.g. a screenshot) from the clipboard
+  useEffect(() => {
+    const handlePaste = (event: ClipboardEvent) => {
+      const clipboardFiles = event.clipboardData?.files;
+      if (!clipboardFiles?.length) return;
+      const images = Array.from(clipboardFiles).filter((file) =>
+        file.type.startsWith("image/"),
+      );
+      if (images.length > 0) {
+        event.preventDefault();
+        onDrop(images);
+      }
+    };
+    window.addEventListener("paste", handlePaste);
+    return () => window.removeEventListener("paste", handlePaste);
+  }, [onDrop]);
 
-    setFiles((prev) => {
-      const updated = [...prev];
-      updated[index] = { status: "processing", data: fileState.data };
-      return updated;
-    });
+  const processFile = async (
+    id: string,
+    { download = true }: { download?: boolean } = {},
+  ): Promise<ProcessedImage | null> => {
+    const entry = filesRef.current.find((f) => f.id === id);
+    if (entry?.status !== "pending") return null;
+
+    updateEntry(id, (current) =>
+      current.status === "pending" ? { ...current, status: "processing" } : current,
+    );
 
     try {
-      const result = await processImage(fileState.data.file, fileState.data.options);
-      setFiles((prev) => {
-        const updated = [...prev];
-        updated[index] = {
-          status: "processed",
-          data: {
-            file: fileState.data.file,
-            preview: fileState.data.preview,
-            metadata: fileState.data.metadata,
-            result,
-            downloaded: true,
-          },
-        };
-        return updated;
-      });
+      const result = await scrubImage(entry.data.file, entry.data.options);
+      updateEntry(id, (current) => ({
+        id: current.id,
+        status: "processed",
+        data: {
+          file: entry.data.file,
+          preview: entry.data.preview,
+          metadata: entry.data.metadata,
+          result,
+          downloaded: download,
+        },
+      }));
 
-      // Auto-download the cleaned file
-      const downloadUrl = createDownloadUrl(result.cleaned.buffer, result.cleaned.format);
-      const link = document.createElement("a");
-      link.href = downloadUrl;
-      const outFormat = result.cleaned.format;
-      const extension = outFormat === "jpeg" ? "jpg" : outFormat;
-      const cleanName = fileState.data.file.name.replace(/\.[^/.]+$/, "") + `-picscrub.${extension}`;
-      link.download = cleanName;
-      link.click();
-      URL.revokeObjectURL(downloadUrl);
+      if (download) {
+        const downloadUrl = createDownloadUrl(result.cleaned.buffer, result.cleaned.format);
+        triggerDownload(downloadUrl, cleanedFileName(entry.data.file.name, result.cleaned.format));
+        URL.revokeObjectURL(downloadUrl);
+      }
+      return result;
     } catch (err) {
-      console.error(`Error processing ${fileState.data.file.name}:`, err);
-      setError(`Failed to process ${fileState.data.file.name}`);
-      setFiles((prev) => {
-        const updated = [...prev];
-        updated[index] = { status: "pending", data: fileState.data };
-        return updated;
-      });
+      console.error(`Error processing ${entry.data.file.name}:`, err);
+      setError(`Failed to process ${entry.data.file.name}`);
+      updateEntry(id, (current) =>
+        current.status === "processing" ? { ...current, status: "pending", data: entry.data } : current,
+      );
+      return null;
     }
   };
 
   const processAllFiles = async () => {
-    const pendingIndices = files
-      .map((f, i) => (f.status === "pending" ? i : -1))
-      .filter((i) => i !== -1);
+    const pendingEntries = filesRef.current.filter((f) => f.status === "pending");
+    if (pendingEntries.length === 0) return;
 
-    for (const index of pendingIndices) {
-      await processFile(index);
+    if (pendingEntries.length === 1) {
+      await processFile(pendingEntries[0].id);
+      return;
     }
+
+    // Batch: collect cleaned files and download a single ZIP instead of
+    // triggering one download per file.
+    const cleaned: { name: string; result: ProcessedImage }[] = [];
+    for (const entry of pendingEntries) {
+      const result = await processFile(entry.id, { download: false });
+      if (result) {
+        cleaned.push({
+          name: cleanedFileName(entry.data.file.name, result.cleaned.format),
+          result,
+        });
+      }
+    }
+    if (cleaned.length === 0) return;
+
+    const zipEntries: Record<string, Uint8Array> = {};
+    for (const { name, result } of cleaned) {
+      let uniqueName = name;
+      for (let n = 2; uniqueName in zipEntries; n++) {
+        uniqueName = name.replace(/(\.[^.]+)$/, `-${n}$1`);
+      }
+      zipEntries[uniqueName] = new Uint8Array(result.cleaned.buffer);
+    }
+    // Image data is already compressed; store without recompressing
+    const zipped = zipSync(zipEntries, { level: 0 });
+    const blob = new Blob([zipped.buffer as ArrayBuffer], { type: "application/zip" });
+    const url = URL.createObjectURL(blob);
+    triggerDownload(url, "picscrub-cleaned.zip");
+    URL.revokeObjectURL(url);
   };
 
-  const removeFile = (index: number) => {
+  const removeFile = (id: string) => {
     setFiles((prev) => {
-      const updated = [...prev];
-      const file = updated[index];
-      if (file) {
-        URL.revokeObjectURL(file.data.preview);
+      const entry = prev.find((f) => f.id === id);
+      if (entry) {
+        URL.revokeObjectURL(entry.data.preview);
       }
-      updated.splice(index, 1);
-      return updated;
+      return prev.filter((f) => f.id !== id);
     });
   };
 
-  const downloadFile = (index: number) => {
-    const fileState = files[index];
-    if (fileState?.status !== "processed") return;
+  const downloadFile = (id: string) => {
+    const entry = filesRef.current.find((f) => f.id === id);
+    if (entry?.status !== "processed") return;
 
-    const { result, file } = fileState.data;
+    const { result, file } = entry.data;
     const downloadUrl = createDownloadUrl(result.cleaned.buffer, result.cleaned.format);
-    const link = document.createElement("a");
-    link.href = downloadUrl;
-    const outFormat = result.cleaned.format;
-    const extension = outFormat === "jpeg" ? "jpg" : outFormat;
-    const cleanName = file.name.replace(/\.[^/.]+$/, "") + `-picscrub.${extension}`;
-    link.download = cleanName;
-    link.click();
+    triggerDownload(downloadUrl, cleanedFileName(file.name, result.cleaned.format));
     URL.revokeObjectURL(downloadUrl);
 
-    setFiles((prev) => {
-      const updated = [...prev];
-      if (updated[index]?.status === "processed") {
-        updated[index] = {
-          ...updated[index],
-          data: { ...updated[index].data, downloaded: true },
-        };
-      }
-      return updated;
-    });
+    updateEntry(id, (current) =>
+      current.status === "processed"
+        ? { ...current, data: { ...current.data, downloaded: true } }
+        : current,
+    );
   };
 
   const handleReset = () => {
@@ -279,23 +320,23 @@ export function FileDropzone() {
   if (files.length > 0) {
     return (
       <div className="space-y-4">
-        {files.map((fileState, index) => {
-          const file = fileState.data.file;
-          const preview = fileState.data.preview;
-          const fileSize = fileState.status === "processed"
-            ? fileState.data.result.original.size
-            : fileState.data.file.size;
+        {files.map((entry) => {
+          const file = entry.data.file;
+          const preview = entry.data.preview;
+          const fileSize = entry.status === "processed"
+            ? entry.data.result.original.size
+            : entry.data.file.size;
 
           return (
-            <Card key={index} className="overflow-hidden">
+            <Card key={entry.id} className="overflow-hidden">
               <CardContent className="p-4">
                 {/* Header */}
                 <div className="flex items-start justify-between mb-3">
                   <div>
                     <h3 className="font-semibold text-lg">{file.name}</h3>
                     <p className="text-sm text-muted-foreground">
-                      {fileState.status === "processed"
-                        ? `${formatFileSize(fileState.data.result.original.size)} → ${formatFileSize(fileState.data.result.cleaned.size)}`
+                      {entry.status === "processed"
+                        ? `${formatFileSize(entry.data.result.original.size)} → ${formatFileSize(entry.data.result.cleaned.size)}`
                         : formatFileSize(fileSize)}
                     </p>
                   </div>
@@ -304,7 +345,7 @@ export function FileDropzone() {
                     size="icon"
                     aria-label={`Remove ${file.name}`}
                     className="h-8 w-8 text-muted-foreground hover:text-foreground"
-                    onClick={() => removeFile(index)}
+                    onClick={() => removeFile(entry.id)}
                   >
                     <X className="h-4 w-4" />
                   </Button>
@@ -330,46 +371,46 @@ export function FileDropzone() {
 
                     {/* Action button */}
                     <div className="mt-2">
-                      {fileState.status === "pending" && !fileState.data.loadingMetadata && (
+                      {entry.status === "pending" && !entry.data.loadingMetadata && (
                         <Button
-                          onClick={() => processFile(index)}
+                          onClick={() => processFile(entry.id)}
                           disabled={isProcessing}
-                          className="w-full gap-2 bg-[oklch(0.738_0.173_81)] hover:bg-[oklch(0.68_0.173_81)]"
+                          className="w-full gap-2"
                         >
                           <Sparkles className="h-4 w-4" />
                           Clean & Download
                         </Button>
                       )}
 
-                      {fileState.status === "processing" && (
+                      {entry.status === "processing" && (
                         <div className="w-full flex items-center justify-center gap-2 py-2 text-sm text-muted-foreground">
                           <Loader2 className="h-4 w-4 animate-spin" />
                           Cleaning...
                         </div>
                       )}
 
-                      {fileState.status === "processed" && (
+                      {entry.status === "processed" && (
                         <Button
-                          onClick={() => downloadFile(index)}
+                          onClick={() => downloadFile(entry.id)}
                           className="w-full gap-2"
                           variant="outline"
                         >
                           <Download className="h-4 w-4" />
-                          Download Again
+                          {entry.data.downloaded ? "Download Again" : "Download"}
                         </Button>
                       )}
                     </div>
 
-                    {fileState.status === "pending" && fileState.data.applicableOptions.length > 0 && (
+                    {entry.status === "pending" && entry.data.applicableOptions.length > 0 && (
                       <div className="mt-1.5 grid gap-0.5">
                         {PRESERVE_OPTIONS
-                          .filter((opt) => fileState.data.applicableOptions.includes(opt.key))
+                          .filter((opt) => entry.data.applicableOptions.includes(opt.key))
                           .map(({ key, label }) => (
                             <label key={key} className="flex items-center gap-1.5 text-sm cursor-pointer select-none">
                               <input
                                 type="checkbox"
-                                checked={!!fileState.data.options[key]}
-                                onChange={(e) => updateFileOption(index, key, e.target.checked)}
+                                checked={!!entry.data.options[key]}
+                                onChange={(e) => updateFileOption(entry.id, key, e.target.checked)}
                                 className="h-3.5 w-3.5"
                               />
                               <span className="text-muted-foreground">{label}</span>
@@ -381,15 +422,15 @@ export function FileDropzone() {
 
                   {/* Metadata Content */}
                   <div className="flex-1 min-w-0">
-                    {fileState.status === "pending" && (
+                    {entry.status === "pending" && (
                       <>
-                        {fileState.data.loadingMetadata ? (
+                        {entry.data.loadingMetadata ? (
                           <div className="flex items-center gap-2 py-4 text-muted-foreground">
                             <Loader2 className="h-4 w-4 animate-spin" />
                             <span className="text-sm">Reading metadata...</span>
                           </div>
-                        ) : fileState.data.metadata ? (
-                          <MetadataViewer metadata={fileState.data.metadata} />
+                        ) : entry.data.metadata ? (
+                          <MetadataViewer metadata={entry.data.metadata} />
                         ) : (
                           <div className="py-4 text-center text-muted-foreground">
                             <p className="text-sm">No readable metadata found in this image.</p>
@@ -400,27 +441,33 @@ export function FileDropzone() {
                       </>
                     )}
 
-                    {fileState.status === "processing" && (
+                    {entry.status === "processing" && (
                       <div className="py-8 text-center text-muted-foreground">
                         <Loader2 className="h-8 w-8 animate-spin mx-auto mb-3 text-primary" />
                         <p className="text-sm">Removing metadata...</p>
                       </div>
                     )}
 
-                    {fileState.status === "processed" && (
+                    {entry.status === "processed" && (
                       <div className="space-y-4">
-                        {fileState.data.result.removedMetadata.length > 0 ? (
+                        {/* With preserve options picscrub can strip metadata yet
+                            report an empty removedMetadata list, so also treat a
+                            size reduction as a successful clean */}
+                        {entry.data.result.removedMetadata.length > 0 ||
+                        entry.data.result.original.size > entry.data.result.cleaned.size ? (
                           <div className="p-4 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-xl">
                             <div className="flex items-center gap-2 mb-2">
                               <Check className="h-5 w-5 text-green-600 dark:text-green-400" />
                               <p className="font-medium text-green-800 dark:text-green-200">Metadata removed successfully</p>
                             </div>
-                            <p className="text-sm text-green-700 dark:text-green-300">
-                              Removed: {fileState.data.result.removedMetadata.join(", ")}
-                            </p>
-                            {fileState.data.result.original.size > fileState.data.result.cleaned.size && (
+                            {entry.data.result.removedMetadata.length > 0 && (
+                              <p className="text-sm text-green-700 dark:text-green-300">
+                                Removed: {entry.data.result.removedMetadata.join(", ")}
+                              </p>
+                            )}
+                            {entry.data.result.original.size > entry.data.result.cleaned.size && (
                               <p className="text-sm text-green-600 dark:text-green-400 mt-2">
-                                File size reduced by {formatFileSize(fileState.data.result.original.size - fileState.data.result.cleaned.size)}
+                                File size reduced by {formatFileSize(entry.data.result.original.size - entry.data.result.cleaned.size)}
                               </p>
                             )}
                           </div>
@@ -433,13 +480,13 @@ export function FileDropzone() {
                         )}
 
                         {/* Show what was in the image before */}
-                        {fileState.data.metadata && Object.keys(fileState.data.metadata).length > 0 && (
+                        {entry.data.metadata && Object.keys(entry.data.metadata).length > 0 && (
                           <details className="text-sm">
                             <summary className="cursor-pointer text-muted-foreground hover:text-foreground">
                               View original metadata
                             </summary>
                             <div className="mt-3">
-                              <MetadataViewer metadata={fileState.data.metadata} />
+                              <MetadataViewer metadata={entry.data.metadata} />
                             </div>
                           </details>
                         )}
@@ -458,7 +505,7 @@ export function FileDropzone() {
             <Button
               onClick={processAllFiles}
               disabled={isProcessing}
-              className="gap-2 bg-[oklch(0.738_0.173_81)] hover:bg-[oklch(0.68_0.173_81)]"
+              className="gap-2"
             >
               {isProcessing ? (
                 <>
@@ -467,8 +514,8 @@ export function FileDropzone() {
                 </>
               ) : (
                 <>
-                  <Sparkles className="h-4 w-4" />
-                  Clean & Download All ({pendingCount} images)
+                  <FileArchive className="h-4 w-4" />
+                  Clean All & Download ZIP ({pendingCount} images)
                 </>
               )}
             </Button>
@@ -509,7 +556,7 @@ export function FileDropzone() {
   }
 
   return (
-    <Card className="border-2 border-dashed border-[oklch(0.738_0.173_81)]">
+    <Card className="border-2 border-dashed border-primary">
       <CardContent className="p-0">
         <div
           {...getRootProps()}
@@ -539,11 +586,11 @@ export function FileDropzone() {
           ) : (
             <>
               <Upload className="h-12 w-12 text-muted-foreground mb-4" />
-              <p className="text-lg font-medium mb-2">Drop images here or click to upload</p>
+              <p className="text-lg font-medium mb-2">Drop images here, click to upload, or paste from clipboard</p>
               <p className="text-sm text-muted-foreground mb-4">
                 JPEG, PNG, WebP, GIF, SVG, TIFF, HEIC, DNG, RAW
               </p>
-              <Button className="bg-[oklch(0.738_0.173_81)] text-white hover:bg-[oklch(0.68_0.173_81)]">Select Images</Button>
+              <Button>Select Images</Button>
             </>
           )}
         </div>

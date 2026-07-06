@@ -74,21 +74,7 @@ export function MetadataViewer({ metadata, loading }: MetadataViewerProps) {
 
     const result: MetadataField[] = [];
 
-    // GPS Location - High Risk
-    if (metadata.latitude && metadata.longitude) {
-      result.push({
-        label: "GPS Location",
-        value: formatGPS(
-          metadata.latitude as number,
-          (metadata.GPSLatitudeRef as string) || "N",
-          metadata.longitude as number,
-          (metadata.GPSLongitudeRef as string) || "E"
-        ),
-        icon: MapPin,
-        category: "location",
-        risk: "high",
-      });
-    }
+    // GPS location gets its own prominent callout below instead of a grid row
 
     // Date/Time - High Risk
     if (metadata.DateTimeOriginal) {
@@ -261,6 +247,16 @@ export function MetadataViewer({ metadata, loading }: MetadataViewerProps) {
     return result;
   }, [metadata]);
 
+  const gps = useMemo(() => {
+    if (
+      typeof metadata?.latitude === "number" &&
+      typeof metadata?.longitude === "number"
+    ) {
+      return { lat: metadata.latitude, lon: metadata.longitude };
+    }
+    return null;
+  }, [metadata]);
+
   const allTags = useMemo(() => {
     if (!metadata) return [];
     return Object.entries(metadata)
@@ -270,6 +266,7 @@ export function MetadataViewer({ metadata, loading }: MetadataViewerProps) {
   }, [metadata]);
 
   const [showAllTags, setShowAllTags] = useState(false);
+  const [showMap, setShowMap] = useState(false);
 
   if (loading) {
     return (
@@ -279,7 +276,7 @@ export function MetadataViewer({ metadata, loading }: MetadataViewerProps) {
     );
   }
 
-  if (!metadata || (fields.length === 0 && allTags.length === 0)) {
+  if (!metadata || (fields.length === 0 && allTags.length === 0 && !gps)) {
     return null;
   }
 
@@ -297,6 +294,62 @@ export function MetadataViewer({ metadata, loading }: MetadataViewerProps) {
 
   return (
     <div className="space-y-3">
+      {gps && (
+        <div className="p-4 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-xl">
+          <div className="flex items-start gap-3">
+            <MapPin className="h-5 w-5 text-red-600 dark:text-red-400 mt-0.5 shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="font-medium text-red-800 dark:text-red-200">
+                This photo reveals where it was taken
+              </p>
+              <p className="text-sm font-mono text-red-700 dark:text-red-300 mt-0.5">
+                {formatGPS(
+                  gps.lat,
+                  (metadata.GPSLatitudeRef as string) || (gps.lat < 0 ? "S" : "N"),
+                  gps.lon,
+                  (metadata.GPSLongitudeRef as string) || (gps.lon < 0 ? "W" : "E")
+                )}
+              </p>
+              {!showMap && (
+                <>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="mt-2 border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-950/50"
+                    onClick={() => setShowMap(true)}
+                  >
+                    <MapPin className="h-3.5 w-3.5" />
+                    Show on map
+                  </Button>
+                  <p className="text-xs text-red-600/80 dark:text-red-400/80 mt-1.5">
+                    The map is loaded from openstreetmap.org, so the coordinates
+                    leave your device only if you click.
+                  </p>
+                </>
+              )}
+            </div>
+          </div>
+          {showMap && (
+            <div className="mt-3">
+              <iframe
+                title="Photo location"
+                src={`https://www.openstreetmap.org/export/embed.html?bbox=${gps.lon - 0.01},${gps.lat - 0.005},${gps.lon + 0.01},${gps.lat + 0.005}&layer=mapnik&marker=${gps.lat},${gps.lon}`}
+                className="w-full h-64 rounded-lg border border-red-200 dark:border-red-800"
+                loading="lazy"
+                sandbox="allow-scripts allow-same-origin"
+              />
+              <a
+                href={`https://www.openstreetmap.org/?mlat=${gps.lat}&mlon=${gps.lon}#map=15/${gps.lat}/${gps.lon}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block mt-1.5 text-xs text-red-700 dark:text-red-300 underline underline-offset-2"
+              >
+                Open full map on OpenStreetMap
+              </a>
+            </div>
+          )}
+        </div>
+      )}
       {fields.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {fields.map((field) => (

@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: "PNG Format Deep Dive - PicScrub",
   description:
     "Technical guide to PNG file structure, chunk-based metadata, and how PicScrub removes metadata while preserving image quality.",
+  alternates: { canonical: "/formats/png" },
 };
 
 const jsonLd = [
